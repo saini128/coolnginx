@@ -22,6 +22,11 @@ This CLI tool provides an intuitive way to manage Nginx configurations without r
 * Nginx installed on your system
 * BoltDB (installed with go get go.etcd.io/bbolt)
 
+### Initialization
+
+* It is checking if nginx is running or not
+* It is check if AI agent (for now support is for groq only) is present or not. If not then it picks env `GROQ_API_KEY` from os
+
 ### Configuration Storage
 
 The tool uses BoltDB to store simplified versions of your Nginx configurations. The database file `nginx_configs.db` is created to store all the data.

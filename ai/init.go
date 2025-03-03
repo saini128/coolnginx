@@ -1,13 +1,20 @@
 package ai
 
-import "errors"
+import (
+	"coolnginx/db"
+	"coolnginx/models"
+	"errors"
+)
 
-func AddAi(agent, api_key string) error {
+func AddAi(agent *models.AiAgent) error {
 	var AgentNotAllowed error = errors.New("AgentNotAllowed")
-	if !IsAgentInList(agent) {
+	if !IsAgentInList(agent.Name) {
 		return AgentNotAllowed
 
 	}
-	//use db package to add ai to db
+	err := db.StoreOrUpdateAI(agent)
+	if err != nil {
+		return err
+	}
 	return nil
 }
