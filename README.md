@@ -47,6 +47,7 @@ Original Nginx configuration files are backed up before any changes are made. Ba
 ### Dependencies
 
 * `go.etcd.io/bbolt`
+* `github.com/nginxinc/nginx-go-crossplane`
 
 ### Contributing
 

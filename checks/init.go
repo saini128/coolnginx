@@ -4,7 +4,9 @@ import (
 	"coolnginx/ai"
 	"coolnginx/db"
 	"coolnginx/models"
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -24,7 +26,7 @@ func Init() {
 	} else {
 		fmt.Println("Nginx Running Properly")
 	}
-	//check if nginx config is accessible
+
 	//check if db is empty
 	err = CheckAIModelExists()
 	if err != nil {
@@ -34,6 +36,10 @@ func Init() {
 			fmt.Println(err.Error())
 		}
 	}
+	//make a go routing that curls the ai api to check if it is working or not
+	// 2 edge cases, api unauthorized || network issues
+	// nginx.StoreNginxMainConfigFile()
+	FetchNginxConfig()
 	fmt.Println("Initialization completed successfully.")
 
 }
@@ -63,6 +69,9 @@ func StoreAIAgent() error {
 	agent := &models.AiAgent{}
 	agent.Name = "Groq"
 	agent.ApiKey = os.Getenv("GROQ_API_KEY")
+	if agent.ApiKey == "" {
+		return fmt.Errorf("api key not found")
+	}
 	fmt.Println(agent)
 	err := ai.AddAi(agent)
 	if err != nil {
@@ -70,4 +79,11 @@ func StoreAIAgent() error {
 	}
 	fmt.Println("AI Agent stored successfully")
 	return nil
+}
+
+func FetchNginxConfig() {
+
+	configs, _ := db.GetAllNginxConfigs()
+	conf, _ := json.Marshal(configs)
+	log.Println("Stored Configs:", string(conf))
 }
